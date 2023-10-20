@@ -1,0 +1,462 @@
+{
+    "log": {
+      "level": "debug",
+      "timestamp": true
+    },
+    "dns": {
+      "servers": [
+        {
+          "tag": "proxyDns",
+          "address": "8.8.8.8",
+          "detour": "proxy"
+        },
+        {
+          "tag": "localDns",
+          "address": "https://223.5.5.5/dns-query",
+          "detour": "direct"
+        },
+        {
+          "tag": "block",
+          "address": "rcode://success"
+        },
+        {
+          "tag": "remote",
+          "address": "fakeip"
+        }
+      ],
+      "rules": [
+        {
+          "domain": [
+            "ghproxy.com",
+            "cdn.jsdelivr.net"
+          ],
+          "server": "localDns"
+        },
+        {
+          "geosite": "category-ads-all",
+          "server": "block"
+        },
+        {
+          "outbound": "any",
+          "server": "localDns",
+          "disable_cache": true
+        },
+        {
+          "geosite": "cn",
+          "server": "localDns"
+        },
+        {
+          "clash_mode": "direct",
+          "server": "localDns"
+        },
+        {
+          "clash_mode": "global",
+          "server": "proxyDns"
+        },
+        {
+          "geosite": "geolocation-!cn",
+          "server": "proxyDns"
+        },
+        {
+          "query_type": [
+            "A",
+            "AAAA"
+          ],
+          "server": "remote"
+        }
+      ],
+      "fakeip": {
+        "enabled": true,
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      },
+      "independent_cache": true,
+      "strategy": "ipv4_only"
+    },
+    "inbounds": [
+      {
+        "type": "tun",
+        "inet4_address": "172.19.0.1/30",
+        "mtu": 9000,
+        "auto_route": true,
+        "strict_route": true,
+        "sniff": true,
+        "endpoint_independent_nat": false,
+        "stack": "system",
+        "platform": {
+          "http_proxy": {
+            "enabled": true,
+            "server": "127.0.0.1",
+            "server_port": 2080
+          }
+        }
+      },
+      {
+        "type": "mixed",
+        "listen": "127.0.0.1",
+        "listen_port": 2080,
+        "sniff": true,
+        "users": []
+      }
+    ],
+    "outbounds": [
+      {
+        "tag": "proxy",
+        "type": "selector",
+        "outbounds": [
+          "auto",
+          "direct",
+          "🇯🇵 Japan",
+          "🇻🇳 FPT(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP1",
+          "🇻🇳 VNPT-VIP2",
+          "🇻🇳 VNPT-VIP3",
+          "🇻🇳 VNPT-VIP4",
+          "🇻🇳 FPT 1",
+          "🇻🇳 FPT 2",
+          "🇻🇳 FPT 3",
+          "🇻🇳 FPT 4",
+          "🇻🇳 FPT🔐(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP🔐(Tự chọn máy chủ)"
+        ]
+      },
+      {
+        "tag": "🌏 !cn",
+        "type": "selector",
+        "outbounds": [
+          "direct",
+          "🇯🇵 Japan",
+          "🇻🇳 FPT(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP1",
+          "🇻🇳 VNPT-VIP2",
+          "🇻🇳 VNPT-VIP3",
+          "🇻🇳 VNPT-VIP4",
+          "🇻🇳 FPT 1",
+          "🇻🇳 FPT 2",
+          "🇻🇳 FPT 3",
+          "🇻🇳 FPT 4",
+          "🇻🇳 FPT🔐(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP🔐(Tự chọn máy chủ)"
+        ]
+      },
+      {
+        "tag": "auto",
+        "type": "urltest",
+        "outbounds": [
+          "🇯🇵 Japan",
+          "🇻🇳 FPT(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP1",
+          "🇻🇳 VNPT-VIP2",
+          "🇻🇳 VNPT-VIP3",
+          "🇻🇳 VNPT-VIP4",
+          "🇻🇳 FPT 1",
+          "🇻🇳 FPT 2",
+          "🇻🇳 FPT 3",
+          "🇻🇳 FPT 4",
+          "🇻🇳 FPT🔐(Tự chọn máy chủ)",
+          "🇻🇳 VNPT-VIP🔐(Tự chọn máy chủ)"
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "1m",
+        "tolerance": 50
+      },
+      {
+        "type": "direct",
+        "tag": "direct"
+      },
+      {
+        "type": "dns",
+        "tag": "dns-out"
+      },
+      {
+        "type": "block",
+        "tag": "block"
+      },
+      {
+        "tag": "🇯🇵 Japan",
+        "type": "vmess",
+        "server": "japan.co2.vn",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/4gre",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 FPT(Tự chọn máy chủ)",
+        "type": "vmess",
+        "server": "fpthn.4gre.net",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 VNPT-VIP(Tự chọn máy chủ)",
+        "type": "vmess",
+        "server": "vnpt.4gre.net",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 VNPT-VIP1",
+        "type": "vmess",
+        "server": "14.225.33.27",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 VNPT-VIP2",
+        "type": "vmess",
+        "server": "14.225.33.163",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 VNPT-VIP3",
+        "type": "vmess",
+        "server": "14.225.23.165",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 VNPT-VIP4",
+        "type": "vmess",
+        "server": "14.225.23.152",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 FPT 1",
+        "type": "vmess",
+        "server": "103.176.110.217",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 FPT 2",
+        "type": "vmess",
+        "server": "103.167.85.191",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 FPT 3",
+        "type": "vmess",
+        "server": "103.232.53.214",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 FPT 4",
+        "type": "vmess",
+        "server": "103.170.254.29",
+        "server_port": 80,
+        "uuid": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "security": "auto",
+        "alter_Id": 0,
+        "packet_encoding": "xudp",
+        "transport": {
+          "type": "ws",
+          "path": "/catport.net",
+          "headers": {
+            "Host": "dl.kgvn.garenanow.com"
+          }
+        }
+      },
+      {
+        "tag": "🇻🇳 FPT🔐(Tự chọn máy chủ)",
+        "type": "trojan",
+        "server": "fpthn.4gre.net",
+        "server_port": 443,
+        "password": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "tls": {
+          "enabled": true,
+          "insecure": true,
+          "server_name": "dl.kgvn.garenanow.com"
+        }
+      },
+      {
+        "tag": "🇻🇳 VNPT-VIP🔐(Tự chọn máy chủ)",
+        "type": "trojan",
+        "server": "vnpt.4gre.net",
+        "server_port": 443,
+        "password": "03f497fe-27c8-4750-bba8-9d73c0d38bb9",
+        "tls": {
+          "enabled": true,
+          "insecure": true,
+          "server_name": "dl.kgvn.garenanow.com"
+        }
+      }
+    ],
+    "route": {
+      "auto_detect_interface": true,
+      "final": "proxy",
+      "geoip": {
+        "download_url": "https://ghproxy.com/github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
+        "download_detour": "direct"
+      },
+      "geosite": {
+        "download_url": "https://ghproxy.com/github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
+        "download_detour": "direct"
+      },
+      "rules": [
+        {
+          "protocol": "dns",
+          "outbound": "dns-out"
+        },
+        {
+          "network": "udp",
+          "port": 443,
+          "outbound": "block"
+        },
+        {
+          "geosite": "category-ads-all",
+          "outbound": "block"
+        },
+        {
+          "clash_mode": "direct",
+          "outbound": "direct"
+        },
+        {
+          "clash_mode": "global",
+          "outbound": "proxy"
+        },
+        {
+          "domain": [
+            "clash.razord.top",
+            "yacd.metacubex.one",
+            "yacd.haishan.me",
+            "d.metacubex.one"
+          ],
+          "outbound": "direct"
+        },
+        {
+          "geosite": "geolocation-!cn",
+          "outbound": "🌏 !cn"
+        },
+        {
+          "geoip": [
+            "private",
+            "cn"
+          ],
+          "outbound": "direct"
+        },
+        {
+          "geosite": "cn",
+          "outbound": "direct"
+        }
+      ]
+    },
+    "experimental": {
+      "clash_api": {
+        "external_controller": "127.0.0.1:9090",
+        "external_ui_download_url": "",
+        "external_ui_download_detour": "",
+        "external_ui": "ui",
+        "secret": "",
+        "default_mode": "rule",
+        "store_selected": true,
+        "cache_file": "",
+        "cache_id": ""
+      }
+    }
+  }
